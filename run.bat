@@ -78,6 +78,3 @@ dotnet run --project "CadastroClienteXpTeste.API\CadastroClienteXpTeste.API.cspr
 
 :: Abre o Visual Studio Code na pasta raiz do projeto
 start code .
-
-:: Abre a URL do Swagger no navegador padrão
-start http://localhost:5228/swagger
