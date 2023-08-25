@@ -23,11 +23,20 @@ namespace CadastroClienteXpTeste.API.Controllers
         [HttpPost("Cliente")]
         public async Task<ActionResult<ClienteDTO>> AddCliente([FromBody] ClienteDTO clienteCreateDTO)
         {
-            var cliente = _mapper.Map<Cliente>(clienteCreateDTO);
-            await _clienteService.AddClienteAsync(cliente);
+            try
+            {
+                var cliente = _mapper.Map<Cliente>(clienteCreateDTO);
+                await _clienteService.AddClienteAsync(cliente);
 
-            var ClienteCreatedDTO = _mapper.Map<ClienteDTO>(cliente);
-            return CreatedAtAction(nameof(GetCliente), new { id = cliente.Id }, ClienteCreatedDTO);
+                var ClienteCreatedDTO = _mapper.Map<ClienteDTO>(cliente);
+                return CreatedAtAction(nameof(GetCliente), new { id = cliente.Id }, ClienteCreatedDTO);
+            }
+            catch (Exception ex)
+            {
+                return ex;
+            }
+
+
         }
 
 
@@ -35,24 +44,44 @@ namespace CadastroClienteXpTeste.API.Controllers
         [HttpGet("Clientes")]
         public async Task<ActionResult<IEnumerable<ClienteDTO>>> GetClientes()
         {
-            var clientes = await _clienteService.GetClientesAsync();
-            var clientesDTO = _mapper.Map<IEnumerable<ClienteDTO>>(clientes);
-            return Ok(clientesDTO);
+
+            try
+            {
+                var clientes = await _clienteService.GetClientesAsync();
+                var clientesDTO = _mapper.Map<IEnumerable<ClienteDTO>>(clientes);
+                return Ok(clientesDTO);
+            }
+            catch (Exception ex)
+            {
+                return ex;
+            }
+
+
         }
 
         // GET: api/Clientes/5
         [HttpGet("Cliente/{id}")]
         public async Task<ActionResult<ClienteDTO>> GetCliente(int id)
         {
-            var cliente = await _clienteService.GetClienteByIdAsync(id);
 
-            if (cliente == null)
+            try
             {
-                return NotFound();
+                var cliente = await _clienteService.GetClienteByIdAsync(id);
+
+                if (cliente == null)
+                {
+                    return NotFound();
+                }
+
+                var clienteDTO = _mapper.Map<ClienteDTO>(cliente);
+                return clienteDTO;
+            }
+            catch (Exception ex)
+            {
+                return ex;
             }
 
-            var clienteDTO = _mapper.Map<ClienteDTO>(cliente);
-            return clienteDTO;
+
         }
 
         // PUT: api/Clientes/5
@@ -64,38 +93,68 @@ namespace CadastroClienteXpTeste.API.Controllers
                 return BadRequest();
             }
 
-            var cliente = _mapper.Map<Cliente>(clienteDTO);
-            await _clienteService.UpdateClienteAsync(cliente);
+            try
+            {
+                var cliente = _mapper.Map<Cliente>(clienteDTO);
+                await _clienteService.UpdateClienteAsync(cliente);
 
-            return NoContent();
+                return NoContent();
+
+            }
+            catch (Exception ex)
+            {
+                return ex;
+            }
+
+
         }
 
         // DELETE: api/Clientes/5
         [HttpDelete("Cliente/{id}")]
         public async Task<IActionResult> DeleteCliente(int id)
         {
-            var cliente = await _clienteService.GetClienteByIdAsync(id);
 
-            if (cliente == null)
+            try
             {
-                return NotFound();
+                var cliente = await _clienteService.GetClienteByIdAsync(id);
+
+                if (cliente == null)
+                {
+                    return NotFound();
+                }
+
+                await _clienteService.DeleteClienteAsync(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return ex;
             }
 
-            await _clienteService.DeleteClienteAsync(id);
-            return NoContent();
+
         }
-       
+
         [HttpGet("GetClienteResumidoById/{id}")]
         public async Task<ActionResult<ClienteResumidoDTO>> GetClienteResumidoById(int id)
         {
-            var cliente = await _clienteService.GetClienteResumidoById(id);
 
-            if (cliente == null)
+            try
             {
-                return NotFound();
-            }      
-            
-            return cliente;
+                var cliente = await _clienteService.GetClienteResumidoById(id);
+
+                if (cliente == null)
+                {
+                    return NotFound();
+                }
+
+                return cliente;
+            }
+            catch (Exception ex)
+            {
+                return ex;
+            }
+
+
         }
     }
 
