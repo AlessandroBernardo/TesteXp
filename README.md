@@ -1,27 +1,36 @@
 # Descrição do Projeto
 
-Este projeto foi desenvolvido com uma simplificação da **Arquitetura Limpa**, utilizando:
+Este projeto foi desenvolvido com base em uma versão simplificada da Arquitetura Limpa e utiliza:
+
 - .NET 7
 - AutoMapper
-- Migrations (Code First)
+- ORM com EF Migrations (Code First)
+- Testes unitários/automatizados com xUnit
 
 Alguns dos padrões de design aplicados incluem:
-- Repositório
-- Injeção de Dependência
+- **Repositório**: Utilizado para abstrair o acesso aos dados, permitindo maior flexibilidade e isolamento entre a lógica de negócio e a camada de dados.
+- **Injeção de Dependência**: Aplicada para promover a inversão de controle, tornando o código mais modular e facilitando o teste unitário.
 
-O projeto também conta com testes unitários, focados na validação (ainda que simplificada) de e-mail e telefone.
+O projeto também conta com testes unitários, focados na validação de e-mail e telefone.
 
 Adicionalmente, o projeto contém o arquivo `docker-compose`, que está configurado para subir um container no Docker com um banco SQL, servindo assim a aplicação.
 
-## Pré-requisitos para execução após ter clonado o repositório locamente:
+## Testes de Funcionalidade com Swagger
+
+Para facilitar a execução de testes de funcionalidade no backend, optei por utilizar o Swagger. Isso elimina a necessidade de criar uma interface separada para interagir com os métodos disponíveis.
+
+O projeto implementa operações CRUD seguindo os conceitos de REST. Além disso, um método adicional, `GetClienteResumidoById`, foi criado. Este método retorna os dados resumidos de um cliente, incluindo o endereço principal e o e-mail principal. A lógica aplicada para determinar o "principal" é baseada na data mais recente de atualização ou inclusão do registro.
+
+## Pré-requisitos para execução após ter clonado o repositório localmente:
+
+> ⚠️ Esteja ciente de possíveis problemas de segurança ao executar o `run.bat`, como bloqueios por antivírus ou falta do **WSL 2** e `dotnet-ef`.
 
 1. Ter o Docker instalado com WSL 2. Siga os passos deste [tutorial](https://learn.microsoft.com/pt-br/windows/wsl/install-manual#step-4---download-the-linux-kernel-update-package).
 2. Verifique se tem a ferramenta `dotnet-ef` instalada. Caso contrário, instale-a usando o comando:
     ```
     dotnet tool install --global dotnet-ef
     ```
-3. Na raiz do projeto existe o arquivo **run.bat**, ele automatiza as etapas envolvidas para execução do projeto, testes e subida do container sql no docker, além da criação do banco.
-4. Esteja ciente de possíveis problemas de segurança ao executar o `run.bat`, como bloqueios por antivírus ou falta do **WSL 2** e `dotnet-ef`. Se necessário, execute as etapas manualmente.
+3. Na raiz do projeto existe o arquivo **run.bat**, que automatiza as etapas envolvidas para execução do projeto, testes e subida do container sql no docker, além da criação do banco. Basta executá-lo. Se tudo correr bem, a aplicação poderá ser acessada por aqui http://localhost:5228/swagger.
 
 ## Executando manualmente:
 
@@ -50,6 +59,9 @@ Adicionalmente, o projeto contém o arquivo `docker-compose`, que está configur
      ```
 
 3. **Configurando a API e Testes**:
+
+   Nesta fase, você estará preparando a API para ser executada, garantindo que todas as dependências sejam instaladas e que o código esteja compilado. Além disso, você também verificará a integridade do código executando testes.
+
    - Na raiz do projeto `CadastroClienteXpTeste.API`, abra o terminal de sua escolha e execute:
      ```
      dotnet restore
@@ -61,6 +73,7 @@ Adicionalmente, o projeto contém o arquivo `docker-compose`, que está configur
      ```
      dotnet test
      ```
+   - 4 testes devem ser executados com sucesso.
 
 4. **Rodando a API**:
    - Na raiz da API `CadastroClienteXpTeste.API`, observe que já existe uma pasta de migrations. Para criar a estrutura do banco no Docker, use:
@@ -74,4 +87,4 @@ Adicionalmente, o projeto contém o arquivo `docker-compose`, que está configur
      ```
 
 5. **Acessando a Documentação**:
-   - Após iniciar a API, abra em seu navegador o endereço sugerido na linha de comando e acrescente `/swagger` ao final "http://localhost:5228/swagger".
+   - Após iniciar a API, abra em seu navegador o endereço sugerido na linha de comando e acrescente `/swagger` ao final. A interface do Swagger proporcionará uma maneira visual e interativa de testar os endpoints da API. Visite: "http://localhost:5228/swagger".
